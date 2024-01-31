@@ -1,8 +1,4 @@
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import Chip from "@mui/material/Chip";
-import IconButton from "@mui/material/IconButton";
+import { Card, CardContent, Typography, Chip, IconButton } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { format } from "date-fns";
 import { Box } from "@mui/material";
@@ -11,7 +7,7 @@ type Props = {
   title: string;
   description: string;
   status: string;
-  createdAt: string;
+  createdAt: number;
 };
 
 const ToDoItem: React.FC<Props> = ({

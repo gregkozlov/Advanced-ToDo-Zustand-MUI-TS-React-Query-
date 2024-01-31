@@ -10,7 +10,6 @@ const TasksPaper = styled(Paper)(({ theme }) => ({
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  minHeight: 200,
 }));
 
 const ToDoList: React.FC = () => {

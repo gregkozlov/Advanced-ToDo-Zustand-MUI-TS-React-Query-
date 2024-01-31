@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { styled } from "@mui/material/styles";
 import {
   Box,
@@ -12,6 +13,7 @@ import {
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 import ToDoList from "../TodoList";
+import useTodoStore from "../store";
 
 const AddTaskPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
@@ -19,6 +21,14 @@ const AddTaskPaper = styled(Paper)(({ theme }) => ({
 }));
 
 const Home: React.FC = () => {
+  const { addTodo } = useTodoStore();
+
+  const [addToDo, setAddToDo] = useState({
+    title: "",
+    description: "",
+  });
+  console.log("🚀 ~ addToDo:", addToDo);
+
   return (
     <Container maxWidth="sm">
       <Breadcrumbs
@@ -37,16 +47,36 @@ const Home: React.FC = () => {
           Add a new Task
         </Typography>
         <Box component="form" noValidate autoComplete="off">
-          <TextField fullWidth label="Title" margin="normal" />
+          <TextField
+            fullWidth
+            label="Title"
+            margin="normal"
+            value={addToDo.title}
+            onChange={e => setAddToDo({ ...addToDo, title: e.target.value })}
+          />
           <TextField
             fullWidth
             label="Description"
             margin="normal"
             multiline
             rows={4}
+            value={addToDo.description}
+            onChange={e =>
+              setAddToDo({ ...addToDo, description: e.target.value })
+            }
           />
           <Box display="flex" justifyContent="flex-end" mt={2}>
-            <Button variant="contained" color="primary">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                addTodo(addToDo.title, addToDo.description);
+                setAddToDo({
+                  title: "",
+                  description: "",
+                });
+              }}
+            >
               Add
             </Button>
           </Box>
