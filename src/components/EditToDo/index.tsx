@@ -9,32 +9,79 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
+import useTodoStore, { TodoState } from "../../store";
+import { useState } from "react";
+
+const listOfNextStatuses = (
+  currentStatus: TodoState,
+): Array<TodoState> | null => {
+  const statusFlow: { [key in TodoState]: Array<TodoState> } = {
+    [TodoState.ToDo]: [TodoState.InProgress],
+    [TodoState.InProgress]: [TodoState.InQA, TodoState.Blocked],
+    [TodoState.Blocked]: [TodoState.ToDo],
+    [TodoState.InQA]: [TodoState.ToDo, TodoState.Done],
+    [TodoState.Done]: [TodoState.Deployed],
+    [TodoState.Deployed]: [],
+  };
+
+  return statusFlow[currentStatus] || null;
+};
 
 function EditToDo() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get("id");
+
+  const { todos, updateTodoState } = useTodoStore();
+  const task = todos.filter(item => item.id == Number(id));
+
+  const [status, setStatus] = useState(task[0].status);
+  const [title, setTitle] = useState(task[0].title);
+  const [description, setDescription] = useState(task[0].description);
+
   return (
     <Box>
       <Paper elevation={3} sx={{ p: 2 }}>
         <Typography variant="h6" component="h3">
           Edit Task
         </Typography>
-        <TextField fullWidth label="Title of the task" margin="normal" />
         <TextField
+          value={title}
+          onChange={e => setTitle(e.target.value)}
+          fullWidth
+          label="Title of the task"
+          margin="normal"
+        />
+        <TextField
+          value={description}
+          onChange={e => setDescription(e.target.value)}
           fullWidth
           label="Description of task goes here."
           margin="normal"
           multiline
+          rows={4}
         />
         <FormControl fullWidth margin="normal">
           <InputLabel id="status-label">Status</InputLabel>
           <Select
+            value={status}
             labelId="status-label"
             id="status-select"
             label="status"
-            // onCha={handleChange}
+            onChange={e => setStatus(e.target.value as TodoState)}
           >
-            <MenuItem value={"todo"}>Todo</MenuItem>
-            <MenuItem value={"in-progress"}>In Progress</MenuItem>
-            <MenuItem value={"done"}>Done</MenuItem>
+            <MenuItem value={task[0].status}>{task[0].status}</MenuItem>
+
+            {listOfNextStatuses(TodoState.InProgress)?.map(status => {
+              return (
+                <MenuItem key={status} value={status}>
+                  {status}
+                </MenuItem>
+              );
+            })}
           </Select>
         </FormControl>
         <Box
@@ -45,8 +92,17 @@ function EditToDo() {
             marginTop: 2,
           }}
         >
-          <Button variant="outlined">Cancel</Button>
-          <Button variant="contained" color="primary">
+          <Button onClick={() => navigate("/")} variant="outlined">
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              updateTodoState(Number(id), title, description, status);
+              navigate("/");
+            }}
+            variant="contained"
+            color="primary"
+          >
             Save Changes
           </Button>
         </Box>

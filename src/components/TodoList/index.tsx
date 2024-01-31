@@ -14,7 +14,6 @@ const TasksPaper = styled(Paper)(({ theme }) => ({
 
 const ToDoList: React.FC = () => {
   const { todos } = useTodoStore();
-  console.log("🚀 ~ todos:", todos);
 
   return (
     <>

@@ -16,7 +16,6 @@ const CreateToDo: React.FC = () => {
     title: "",
     description: "",
   });
-  console.log("🚀 ~ addToDo:", addToDo);
 
   return (
     <>

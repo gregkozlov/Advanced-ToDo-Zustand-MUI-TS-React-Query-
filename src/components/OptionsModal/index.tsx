@@ -1,5 +1,6 @@
 import { MenuItem } from "@mui/material";
 import { Menu } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import useTodoStore from "../../store";
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
 
 const OptionsModal: React.FC<Props> = ({ id, anchorEl, setAnchorEl }) => {
   const { removeTodo } = useTodoStore();
+  const navigate = useNavigate();
 
   const open = Boolean(anchorEl);
 
@@ -34,13 +36,7 @@ const OptionsModal: React.FC<Props> = ({ id, anchorEl, setAnchorEl }) => {
       <MenuItem
         onClick={() => {
           handleMenuClose();
-        }}
-      >
-        Task History
-      </MenuItem>
-      <MenuItem
-        onClick={() => {
-          handleMenuClose();
+          navigate(`/edit?id=${id}`);
         }}
       >
         Edit Task

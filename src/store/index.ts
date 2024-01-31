@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-enum TodoState {
+export enum TodoState {
   ToDo = "ToDo",
   InProgress = "In Progress",
   Blocked = "Blocked",
@@ -22,24 +22,13 @@ type TodoStore = {
   todos: TodoItem[];
   addTodo: (title: string, description: string) => void;
   removeTodo: (id: number) => void;
-  updateTodoState: (id: number, newState: TodoState) => void;
+  updateTodoState: (
+    id: number,
+    title: string,
+    description: string,
+    status: TodoState,
+  ) => void;
 };
-
-const listOfNextStatuses = (
-  currentStatus: TodoState,
-): Array<TodoState> | null => {
-  const statusFlow: { [key in TodoState]: Array<TodoState> } = {
-    [TodoState.ToDo]: [TodoState.InProgress],
-    [TodoState.InProgress]: [TodoState.InQA, TodoState.Blocked],
-    [TodoState.Blocked]: [TodoState.ToDo],
-    [TodoState.InQA]: [TodoState.ToDo, TodoState.Done],
-    [TodoState.Done]: [TodoState.Deployed],
-    [TodoState.Deployed]: [],
-  };
-
-  return statusFlow[currentStatus] || null;
-};
-console.log("🚀 ~ listOfNextStatuses:", listOfNextStatuses(TodoState.InQA));
 
 const useTodoStore = create(
   persist<TodoStore>(
@@ -62,10 +51,10 @@ const useTodoStore = create(
         set(state => ({
           todos: state.todos.filter(todo => todo.id !== id),
         })),
-      updateTodoState: (id, newState) =>
+      updateTodoState: (id, title, description, status) =>
         set(state => ({
           todos: state.todos.map(todo =>
-            todo.id === id ? { ...todo, state: newState } : todo,
+            todo.id === id ? { ...todo, title, description, status } : todo,
           ),
         })),
     }),
