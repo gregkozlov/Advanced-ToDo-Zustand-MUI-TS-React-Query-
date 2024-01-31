@@ -1,18 +1,7 @@
 import { useState } from "react";
 import { styled } from "@mui/material/styles";
-import {
-  Box,
-  Button,
-  Typography,
-  TextField,
-  Paper,
-  Container,
-  Breadcrumbs,
-  Link,
-} from "@mui/material";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { Box, Button, Typography, TextField, Paper } from "@mui/material";
 
-import ToDoList from "../TodoList";
 import useTodoStore from "../../store";
 
 const AddTaskPaper = styled(Paper)(({ theme }) => ({
@@ -20,7 +9,7 @@ const AddTaskPaper = styled(Paper)(({ theme }) => ({
   marginBottom: theme.spacing(3),
 }));
 
-const Home: React.FC = () => {
+const CreateToDo: React.FC = () => {
   const { addTodo } = useTodoStore();
 
   const [addToDo, setAddToDo] = useState({
@@ -30,18 +19,7 @@ const Home: React.FC = () => {
   console.log("🚀 ~ addToDo:", addToDo);
 
   return (
-    <Container maxWidth="sm">
-      <Breadcrumbs
-        separator={<NavigateNextIcon fontSize="small" />}
-        aria-label="breadcrumb"
-        style={{ padding: "20px 0" }}
-      >
-        <Typography color="textPrimary">Task Management</Typography>
-        <Link href="/" sx={{ textDecoration: "none" }}>
-          Home
-        </Link>
-      </Breadcrumbs>
-
+    <>
       <AddTaskPaper elevation={3}>
         <Typography variant="h6" gutterBottom>
           Add a new Task
@@ -82,10 +60,8 @@ const Home: React.FC = () => {
           </Box>
         </Box>
       </AddTaskPaper>
-
-      <ToDoList />
-    </Container>
+    </>
   );
 };
 
-export default Home;
+export default CreateToDo;

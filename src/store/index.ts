@@ -1,13 +1,14 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type TodoState =
-  | "ToDo"
-  | "In Progress"
-  | "Blocked"
-  | "InQA"
-  | "Done"
-  | "Deployed";
+enum TodoState {
+  ToDo = "ToDo",
+  InProgress = "In Progress",
+  Blocked = "Blocked",
+  InQA = "InQA",
+  Done = "Done",
+  Deployed = "Deployed",
+}
 
 type TodoItem = {
   id: number;
@@ -24,6 +25,22 @@ type TodoStore = {
   updateTodoState: (id: number, newState: TodoState) => void;
 };
 
+const listOfNextStatuses = (
+  currentStatus: TodoState,
+): Array<TodoState> | null => {
+  const statusFlow: { [key in TodoState]: Array<TodoState> } = {
+    [TodoState.ToDo]: [TodoState.InProgress],
+    [TodoState.InProgress]: [TodoState.InQA, TodoState.Blocked],
+    [TodoState.Blocked]: [TodoState.ToDo],
+    [TodoState.InQA]: [TodoState.ToDo, TodoState.Done],
+    [TodoState.Done]: [TodoState.Deployed],
+    [TodoState.Deployed]: [],
+  };
+
+  return statusFlow[currentStatus] || null;
+};
+console.log("🚀 ~ listOfNextStatuses:", listOfNextStatuses(TodoState.InQA));
+
 const useTodoStore = create(
   persist<TodoStore>(
     set => ({
@@ -36,7 +53,7 @@ const useTodoStore = create(
               id: Math.floor(Math.random() * 10000),
               title,
               description,
-              status: "In Progress",
+              status: TodoState.InProgress,
               createdAt: Date.now(),
             },
           ],
@@ -53,7 +70,7 @@ const useTodoStore = create(
         })),
     }),
     {
-      name: "todo-storage",
+      name: "todo-localStorage",
     },
   ),
 );
