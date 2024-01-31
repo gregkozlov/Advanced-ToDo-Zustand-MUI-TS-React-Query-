@@ -13,7 +13,7 @@ import {
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 import ToDoList from "../TodoList";
-import useTodoStore from "../store";
+import useTodoStore from "../../store";
 
 const AddTaskPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),

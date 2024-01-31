@@ -2,7 +2,7 @@ import { styled } from "@mui/material/styles";
 
 import { Typography, Paper } from "@mui/material";
 import ToDoItem from "../ToDoItem";
-import useTodoStore from "../store";
+import useTodoStore from "../../store";
 
 const TasksPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
@@ -22,6 +22,7 @@ const ToDoList: React.FC = () => {
         todos.map(todo => (
           <ToDoItem
             key={todo.id}
+            id={todo.id}
             title={todo.title}
             description={todo.description}
             status={todo.status}
