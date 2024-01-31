@@ -11,18 +11,11 @@ import {
 } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
+import ToDoList from "../TodoList";
+
 const AddTaskPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
   marginBottom: theme.spacing(3),
-}));
-
-const TasksPaper = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(3),
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  minHeight: 200,
 }));
 
 const Home: React.FC = () => {
@@ -60,10 +53,7 @@ const Home: React.FC = () => {
         </Box>
       </AddTaskPaper>
 
-      <TasksPaper elevation={3}>
-        <Typography variant="subtitle1">You have nothing to do.</Typography>
-        <Typography variant="subtitle1">Go get some sleep!</Typography>
-      </TasksPaper>
+      <ToDoList />
     </Container>
   );
 };
