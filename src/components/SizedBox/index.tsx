@@ -1,9 +1,9 @@
-import { Box } from '@mui/material'
-import { useTheme } from '@mui/material/styles'
+import { Box } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 interface Props {
-  width?: number
-  height?: number
+  width?: number;
+  height?: number;
 }
 
 /**
@@ -13,7 +13,7 @@ interface Props {
  * @returns a Sized Box
  */
 export function SizedBox({ width = 0, height = 0 }: Props) {
-  const theme = useTheme()
+  const theme = useTheme();
 
   return (
     <Box
@@ -22,5 +22,5 @@ export function SizedBox({ width = 0, height = 0 }: Props) {
         height: theme.spacing(height),
       }}
     />
-  )
+  );
 }
