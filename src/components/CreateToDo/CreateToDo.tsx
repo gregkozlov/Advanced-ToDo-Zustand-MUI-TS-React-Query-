@@ -6,7 +6,6 @@ import useTodoStore from "../../store";
 
 const AddTaskPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
-  marginBottom: theme.spacing(3),
 }));
 
 const CreateToDo: React.FC = () => {

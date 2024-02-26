@@ -2,7 +2,7 @@ import { styled } from "@mui/material/styles";
 
 import { Typography, Paper } from "@mui/material";
 import ToDoItem from "../ToDoItem";
-import useTodoStore from "../../store";
+import { TodoItem } from "../../store/types";
 
 const TasksPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
@@ -12,13 +12,15 @@ const TasksPaper = styled(Paper)(({ theme }) => ({
   justifyContent: "center",
 }));
 
-const ToDoList: React.FC = () => {
-  const { todos } = useTodoStore();
+type Props = {
+  filteredTodos: TodoItem[];
+};
 
+const ToDoList: React.FC<Props> = ({ filteredTodos }) => {
   return (
     <>
-      {todos.length ? (
-        todos.map(todo => (
+      {filteredTodos.length ? (
+        filteredTodos.map(todo => (
           <ToDoItem
             key={todo.id}
             id={todo.id}
