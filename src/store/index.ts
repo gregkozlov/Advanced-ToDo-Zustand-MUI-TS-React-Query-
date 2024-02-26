@@ -1,39 +1,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
-export enum TodoState {
-  ToDo = "ToDo",
-  InProgress = "In Progress",
-  Blocked = "Blocked",
-  InQA = "InQA",
-  Done = "Done",
-  Deployed = "Deployed",
-}
-
-type TodoItem = {
-  id: number;
-  title: string;
-  description: string;
-  status: TodoState;
-  createdAt: number;
-};
-
-type TodoStore = {
-  todos: TodoItem[];
-  addTodo: (title: string, description: string) => void;
-  removeTodo: (id: number) => void;
-  updateTodoState: (
-    id: number,
-    title: string,
-    description: string,
-    status: TodoState,
-  ) => void;
-};
+import { TodoState, TodoStore } from "./types";
 
 const useTodoStore = create(
   persist<TodoStore>(
     set => ({
       todos: [],
+      breadcrumb: "Home",
       addTodo: (title, description) =>
         set(state => ({
           todos: [
@@ -44,6 +17,7 @@ const useTodoStore = create(
               description,
               status: TodoState.InProgress,
               createdAt: Date.now(),
+              history: [],
             },
           ],
         })),
@@ -57,6 +31,25 @@ const useTodoStore = create(
             todo.id === id ? { ...todo, title, description, status } : todo,
           ),
         })),
+
+      addTodoHistoryRecord: (id, status) =>
+        set(state => ({
+          todos: state.todos.map(todo => {
+            if (todo.id === id) {
+              const newRecord = { status, changedAt: Date.now() };
+
+              return {
+                ...todo,
+                status,
+                history: [...todo.history, newRecord],
+              };
+            } else {
+              return todo;
+            }
+          }),
+        })),
+
+      setBreadcrumb: name => set(state => ({ ...state, breadcrumb: name })),
     }),
     {
       name: "todo-localStorage",

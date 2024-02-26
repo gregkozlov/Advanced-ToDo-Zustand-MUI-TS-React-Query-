@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import { Box, Button, Typography, TextField, Paper } from "@mui/material";
 
@@ -10,12 +10,16 @@ const AddTaskPaper = styled(Paper)(({ theme }) => ({
 }));
 
 const CreateToDo: React.FC = () => {
-  const { addTodo } = useTodoStore();
+  const { addTodo, setBreadcrumb } = useTodoStore();
 
   const [addToDo, setAddToDo] = useState({
     title: "",
     description: "",
   });
+
+  useEffect(() => {
+    setBreadcrumb("Home");
+  }, [setBreadcrumb]);
 
   return (
     <>

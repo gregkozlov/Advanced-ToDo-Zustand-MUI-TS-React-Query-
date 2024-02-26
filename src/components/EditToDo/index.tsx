@@ -10,8 +10,9 @@ import {
   MenuItem,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import useTodoStore, { TodoState } from "../../store";
-import { useState } from "react";
+import useTodoStore from "../../store";
+import { useEffect, useState } from "react";
+import { TodoState } from "../../store/types";
 
 const listOfNextStatuses = (
   currentStatus: TodoState,
@@ -35,12 +36,20 @@ function EditToDo() {
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get("id");
 
-  const { todos, updateTodoState } = useTodoStore();
-  const task = todos.filter(item => item.id == Number(id));
+  const { todos, updateTodoState, addTodoHistoryRecord, setBreadcrumb } =
+    useTodoStore();
+  const task = todos.filter(item => item.id === Number(id));
+
+  const findToDo = todos.filter(item => item.id === Number(id));
+  const currentStatus = findToDo[0].status;
 
   const [status, setStatus] = useState(task[0].status);
   const [title, setTitle] = useState(task[0].title);
   const [description, setDescription] = useState(task[0].description);
+
+  useEffect(() => {
+    setBreadcrumb("Edit");
+  }, [setBreadcrumb]);
 
   return (
     <Box>
@@ -75,7 +84,7 @@ function EditToDo() {
           >
             <MenuItem value={task[0].status}>{task[0].status}</MenuItem>
 
-            {listOfNextStatuses(TodoState.InProgress)?.map(status => {
+            {listOfNextStatuses(currentStatus)?.map(status => {
               return (
                 <MenuItem key={status} value={status}>
                   {status}
@@ -98,6 +107,7 @@ function EditToDo() {
           <Button
             onClick={() => {
               updateTodoState(Number(id), title, description, status);
+              addTodoHistoryRecord(Number(id), status);
               navigate("/");
             }}
             variant="contained"
